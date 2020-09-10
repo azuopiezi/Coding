@@ -1,0 +1,146 @@
+2016-03-1703/17/16 hello world hello China
+shiadfadagf
+hello,world hello China
+
+
+2016-03-1703/17/16 hello world hello China
+shiadfadagf
+hello,world hello China
+
+
+2016-03-1703/17/16 hello world hello China
+shiadfadagf
+hello,world hello China
+
+
+2016-03-1703/17/16 hello world hello China
+shiadfadagf
+hello,world hello China
+
+
+2016-03-1703/17/16 hello world hello China
+shiadfadagf
+hello,world hello China
+
+
+2016-03-1703/17/16 hello world hello China
+shiadfadagf
+hello,world hello China
+
+
+2016-03-1703/17/16 hello world hello China
+shiadfadagf
+hello,world hello China
+
+
+2016-03-1703/17/16 hello world hello China
+shiadfadagf
+hello,world hello China
+
+
+2016-03-1703/17/16 hello world hello China
+shiadfadagf
+hello,world hello China
+
+
+2016-03-1703/17/16 hello world hello China
+shiadfadagf
+hello,world hello China
+
+
+2016-03-1703/17/16 hello world hello China
+shiadfadagf
+hello,world hello China
+
+
+2016-03-1703/17/16 hello world hello China
+shiadfadagf
+hello,world hello China
+
+
+2016-03-1703/17/16###### hello world hello China
+shiadfadagf
+hello,world hello China
+
+
+2016-03-1703/17/16
+ hello world hello China
+shiadfadagf
+hello,world hello China
+
+
+2016-03-1703/17/16
+ hello world hello China
+shiadfadagf
+hello,world hello China
+
+
+Traceback (most recent call last):
+  File "D:/python/Python_develop/root.py", line 7, in <module>
+    f = open(r"./hello12.txt","r")
+IOError: [Errno 2] No such file or directory: './hello12.txt'
+2016-03-1703/17/16
+ hello world hello China
+shiadfadagf
+hello,world hello China
+
+
+2016-03-1703/17/16
+ 
+
+
+2016-03-1703/17/16
+ 
+
+
+2016-03-1703/17/16
+ hello world hello China
+shiadfadagf
+hello,world hello China2016-03-1703/17/16
+ hello world hello China
+shiadfadagf
+hello,world hello China2016-03-1703/17/16
+ hello world hello China
+shiadfadagf
+hello,world hello China2016-03-1703/17/16
+ hello world hello China
+shiadfadagf
+hello,world hello China2016-03-1703/17/16
+ hello world hello China
+shiadfadagf
+hello,world hello China2016-03-1703/17/16
+ hello world hello China
+shiadfadagf
+hello,world hello China2016-03-1703/17/16
+ hello world hello China
+shiadfadagf
+hello,world hello China2016-03-1703/17/16
+ hello world hello China
+shiadfadagf
+hello,world hello China2016-03-1703/17/16
+ hello world hello China
+shiadfadagf
+hello,world hello China2016-03-1703/17/16
+ hello world hello China
+shiadfadagf
+hello,world hello ChinaTraceback (most recent call last):
+  File "/Users/shixingwen/Documents/python/PycharmProjects/Python_develop/root.py", line 8, in <module>
+    t = time.strftime("%Y-%m-%d%x",time.localtime())
+AttributeError: 'module' object has no attribute 'strftime'
+2016-05-1305/13/16
+ hello world hello China
+shiadfadagf
+hello,world hello China2016-05-1305/13/16
+ hello world hello China
+shiadfadagf
+hello,world hello China2016-05-1305/13/16
+ hello world hello China
+shiadfadagf
+hello,world hello ChinaTraceback (most recent call last):
+  File "/Users/shixingwen/Documents/python/PycharmProjects/Python_develop/root.py", line 8, in <module>
+    t = time.strftime("%Y-%m-%d%x",time.localtime())
+AttributeError: 'module' object has no attribute 'strftime'
+Traceback (most recent call last):
+  File "/Users/shixingwen/Documents/python/PycharmProjects/Python_develop/root.py", line 8, in <module>
+    t = time.strftime("%Y-%m-%d%x",time.localtime())
+AttributeError: 'module' object has no attribute 'strftime'

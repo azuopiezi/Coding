@@ -1,0 +1,166 @@
+一、搜集静态文件
+
+1.1 命令行查看 collectstatic
+
+guoguos-MacBook-Pro:mysite guoguo$ python manage.py -h
+
+[staticfiles]
+    collectstatic
+    findstatic
+    runserver
+
+1.2 执行 python manage.py collectstatic 收集信息
+guoguos-MacBook-Pro:mysite guoguo$ python manage.py collectstatic
+
+You have requested to collect static files at the destination
+location as specified in your settingsguoguo.
+
+This will overwrite existing files!
+Are you sure you want to do this?
+
+Type 'yes' to continue, or 'no' to cancel: yes
+Traceback (most recent call last):
+  File "manage.py", line 22, in <module>
+    execute_from_command_line(sys.argv)
+  File "/Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages/Django-1.11.7-py3.5.egg/django/core/management/__init__.py", line 364, in execute_from_command_line
+    utility.execute()
+  File "/Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages/Django-1.11.7-py3.5.egg/django/core/management/__init__.py", line 356, in execute
+    self.fetch_command(subcommand).run_from_argv(self.argv)
+  File "/Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages/Django-1.11.7-py3.5.egg/django/core/management/base.py", line 283, in run_from_argv
+    self.execute(*args, **cmd_options)
+  File "/Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages/Django-1.11.7-py3.5.egg/django/core/management/base.py", line 330, in execute
+    output = self.handle(*args, **options)
+  File "/Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages/Django-1.11.7-py3.5.egg/django/contrib/staticfiles/management/commands/collectstatic.py", line 199, in handle
+    collected = self.collect()
+  File "/Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages/Django-1.11.7-py3.5.egg/django/contrib/staticfiles/management/commands/collectstatic.py", line 124, in collect
+    handler(path, prefixed_path, storage)
+  File "/Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages/Django-1.11.7-py3.5.egg/django/contrib/staticfiles/management/commands/collectstatic.py", line 354, in copy_file
+    if not self.delete_file(path, prefixed_path, source_storage):
+  File "/Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages/Django-1.11.7-py3.5.egg/django/contrib/staticfiles/management/commands/collectstatic.py", line 260, in delete_file
+    if self.storage.exists(prefixed_path):
+  File "/Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages/Django-1.11.7-py3.5.egg/django/core/files/storage.py", line 392, in exists
+    return os.path.exists(self.path(name))
+  File "/Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages/Django-1.11.7-py3.5.egg/django/contrib/staticfiles/storage.py", line 50, in path
+    raise ImproperlyConfigured("You're using the staticfiles app "
+django.core.exceptions.ImproperlyConfigured: You're using the staticfiles app without having set the STATIC_ROOT setting to a filesystem path.
+guoguos-MacBook-Pro:mysite guoguo$ python manage.py -h
+1.3 解决报错 发现报错，在setting.py 中没有设置 STATIC_ROOT，ok，下面进行设置
+
+在setting.py  底部设置配置 如下
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+1.4 再次执行，查看结果
+guoguos-MacBook-Pro:mysite guoguo$ python manage.py collectstatic
+
+过程如下，这部分是把django 默认自带的 static 文件 搜集 放到该项目中，最后显示搜集62项
+Copying '/Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages/Django-1.11.7-py3.5.egg/django/contrib/admin/static/admin/css/base.css'
+
+Copying '/Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages/Django-1.11.7-py3.5.egg/django/contrib/admin/static/admin/js/vendor/xregexp/xregexp.min.js'
+Copying '/Users/guoguo/Documents/GitHub/zuopiezi/python_project/develop_py/mysite/polls/static/polls/style.css'
+
+62 static files copied to '/Users/guoguo/Documents/GitHub/zuopiezi/python_project/develop_py/mysite/static'.
+
+1.5 在 polls 项目发现有个多了个static 目录，里面显示上面搜集到的信息
+
+└── static
+    ├── admin
+    │   ├── css
+    │   │   ├── base.css
+    │   │   ├── changelists.css
+    │   │   ├── dashboard.css
+    │   │   ├── fonts.css
+    │   │   ├── forms.css
+    │   │   ├── login.css
+    │   │   ├── rtl.css
+    │   │   └── widgets.css
+    │   ├── fonts
+    │   │   ├── LICENSE.txt
+    │   │   ├── README.txt
+    │   │   ├── Roboto-Bold-webfont.woff
+    │   │   ├── Roboto-Light-webfont.woff
+    │   │   └── Roboto-Regular-webfont.woff
+    │   ├── img
+     
+    │           ├── jquery
+    │           │   ├── LICENSE-JQUERY.txt
+    │           │   ├── jquery.js
+    │           │   └── jquery.min.js
+    │           └── xregexp
+    │               ├── LICENSE-XREGEXP.txt
+    │               ├── xregexp.js
+    │               └── xregexp.min.js
+
+
+二、自定义static文件
+ 2.1 创建自定义static文件
+
+│   ├── static
+│   │   └── polls
+│   │       ├── images
+│   │       │   └── osd.png
+│   │       └── style.css
+
+2.2 编辑css 内容 设置 字体颜色和 背景图片
+guoguos-MacBook-Pro:polls guoguo$ cat style.css 
+li a {
+color: green;
+}
+body {
+background: white url("images/osd.png") no-repeat right bottom;
+}
+
+2.3 编辑index.html文件内容
+
+增加如下：
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}" />
+内容
+
+guoguos-MacBook-Pro:polls guoguo$ pwd
+/Users/guoguo/Documents/GitHub/zuopiezi/python_project/develop_py/mysite/polls/templates/polls
+guoguos-MacBook-Pro:polls guoguo$ cat index.html 
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}" />
+
+{% if latest_question_list %}
+<ul>
+	{% for question in latest_question_list %}
+<li>
+
+     <a href="{% url 'polls:detail' question.id %}"> {{question.question_text }} </a>
+     
+		
+</li>
+{% endfor %}
+</ul>
+{% else %}
+<p> No polls are available.</p>
+{% endif %}guoguos-MacBook-Pro:polls guoguo$ 
+
+2.4 再次用python manage.py collectstatic 搜集信息
+guoguos-MacBook-Pro:mysite guoguo$ python manage.py collectstatic
+
+You have requested to collect static files at the destination
+location as specified in your settings:
+
+    /Users/guoguo/Documents/GitHub/zuopiezi/python_project/develop_py/mysite/static
+
+This will overwrite existing files!
+Are you sure you want to do this?
+
+Type 'yes' to continue, or 'no' to cancel: yes
+Copying '/Users/guoguo/Documents/GitHub/zuopiezi/python_project/develop_py/mysite/polls/static/polls/style.css'
+
+1 static file copied to '/Users/guoguo/Documents/GitHub/zuopiezi/python_project/develop_py/mysite/static', 61 unmodified.
+
+2.5 查看结果   查看 polls程序是否更新
+
+guoguos-MacBook-Pro:mysite guoguo$ python manage.py runserver
+Performing system checks...
+2.6 结果如下
+
+
+
+
+

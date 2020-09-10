@@ -1,0 +1,10 @@
+eclipse.preferences.version=1
+encoding//apps/assets/const.py=utf-8
+encoding//apps/assets/models/cluster.py=utf-8
+encoding//apps/assets/models/group.py=utf-8
+encoding//apps/assets/models/label.py=utf-8
+encoding//apps/assets/models/node.py=utf-8
+encoding//apps/common/celery.py=utf-8
+encoding//apps/common/compat.py=utf-8
+encoding//apps/jumpserver/middleware.py=utf-8
+encoding//apps/jumpserver/urls.py=utf-8

@@ -1,0 +1,174 @@
+[?1049h[?1h=[1;26r[?12;25h[?12l[?25h[27m[m[H[2J[?25l[26;1H"/tmp/virsh4NxjJY.xml" 113L, 4132C[1;1H[36m<domain [m[32mtype[m=[31m'kvm'[m[36m>
+[m  [36m<name>[madmin[36m</name>
+[m  [36m<uuid>[mbe82ce21-ed62-4e3c-8467-4c12801b5a62[36m</uuid>
+[m  [36m<memory [m[32munit[m=[31m'KiB'[m[36m>[m10485760[36m</memory>
+[m  [36m<currentMemory [m[32munit[m=[31m'KiB'[m[36m>[m10485760[36m</currentMemory>
+[m  [36m<vcpu [m[32mplacement[m=[31m'static'[m[36m>[m10[36m</vcpu>
+[m  [36m<os>
+[m    [36m<type [m[32march[m=[31m'x86_64'[m[36m [m[32mmachine[m=[31m'pc-i440fx-2.6'[m[36m>[mhvm[36m</type>
+[m    [36m<boot [m[32mdev[m=[31m'hd'[m[36m/>
+[m  [36m</os>
+[m  [36m<features>
+[m    [36m<acpi/>
+[m    [36m<apic/>
+[m    [36m<vmport [m[32mstate[m=[31m'off'[m[36m/>
+[m  [36m</features>
+[m  [36m<cpu [m[32mmode[m=[31m'custom'[m[36m [m[32mmatch[m=[31m'exact'[m[36m>
+[m    [36m<model [m[32mfallback[m=[31m'allow'[m[36m>[mIvyBridge[36m</model>
+[m  [36m</cpu>
+[m  [36m<clock [m[32moffset[m=[31m'utc'[m[36m>
+[m    [36m<timer [m[32mname[m=[31m'rtc'[m[36m [m[32mtickpolicy[m=[31m'catchup'[m[36m/>
+[m    [36m<timer [m[32mname[m=[31m'pit'[m[36m [m[32mtickpolicy[m=[31m'delay'[m[36m/>
+[m    [36m<timer [m[32mname[m=[31m'hpet'[m[36m [m[32mpresent[m=[31m'no'[m[36m/>
+[m  [36m</clock>
+[m  [36m<on_poweroff>[mdestroy[36m</on_poweroff>
+[m  [36m<on_reboot>[mrestart[36m</on_reboot>[m[26;77H1,1[11CTop[1;1H[?12l[?25h[?25l[26;77H2,3[2;3H[?12l[?25h[?25l[26;1HType  :quit<Enter>  to exit Vim[26;32H[K[26;77H2,3[11CTop[2;3H[?12l[?25h[?25l[26;77H[K[26;77H2,3[11CTop[2;3H[?12l[?25h[?25l[26;77H[K[26;77H2,3[11CTop[2;3H[?12l[?25h[?25l[26;77H3[3;3H[?12l[?25h[?25l[26;77H4[4;3H[?12l[?25h[?25l[26;77H5[5;3H[?12l[?25h[?25l[26;77H6[6;3H[?12l[?25h[?25l[26;77H7[7;3H[?12l[?25h[?25l[26;77H8,5[8;5H[?12l[?25h[26;1H[?1l>[?1049lVim: Error reading input, exiting...
+Vim: Finished.
+[26;1H[J<domain type='kvm' id='64'>
+  <name>admin</name>
+  <uuid>be82ce21-ed62-4e3c-8467-4c12801b5a62</uuid>
+  <memory unit='KiB'>10485760</memory>
+  <currentMemory unit='KiB'>10485760</currentMemory>
+  <vcpu placement='static'>10</vcpu>
+  <resource>
+    <partition>/machine</partition>
+  </resource>
+  <os>
+    <type arch='x86_64' machine='pc-i440fx-2.6'>hvm</type>
+    <boot dev='hd'/>
+  </os>
+  <features>
+    <acpi/>
+    <apic/>
+    <vmport state='off'/>
+  </features>
+  <cpu mode='custom' match='exact'>
+    <model fallback='allow'>IvyBridge</model>
+  </cpu>
+  <clock offset='utc'>
+    <timer name='rtc' tickpolicy='catchup'/>
+    <timer name='pit' tickpolicy='delay'/>
+    <timer name='hpet' present='no'/>
+  </clock>
+  <on_poweroff>destroy</on_poweroff>
+  <on_reboot>restart</on_reboot>
+  <on_crash>restart</on_crash>
+  <pm>
+    <suspend-to-mem enabled='no'/>
+    <suspend-to-disk enabled='no'/>
+  </pm>
+  <devices>
+    <emulator>/usr/bin/qemu-kvm</emulator>
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='raw'/>
+      <source file='/home/soc/vms/admin.img'/>
+      <backingStore/>
+      <target dev='vda' bus='virtio'/>
+      <alias name='virtio-disk0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x07' function='0x0'/>
+    </disk>
+    <disk type='file' device='cdrom'>
+      <driver name='qemu' type='raw'/>
+      <backingStore/>
+      <target dev='hda' bus='ide'/>
+      <readonly/>
+      <alias name='ide0-0-0'/>
+      <address type='drive' controller='0' bus='0' target='0' unit='0'/>
+    </disk>
+    <controller type='usb' index='0' model='ich9-ehci1'>
+      <alias name='usb'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x06' function='0x7'/>
+    </controller>
+    <controller type='usb' index='0' model='ich9-uhci1'>
+      <alias name='usb'/>
+      <master startport='0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x06' function='0x0' multifunction='on'/>
+    </controller>
+    <controller type='usb' index='0' model='ich9-uhci2'>
+      <alias name='usb'/>
+      <master startport='2'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x06' function='0x1'/>
+    </controller>
+    <controller type='usb' index='0' model='ich9-uhci3'>
+      <alias name='usb'/>
+      <master startport='4'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x06' function='0x2'/>
+    </controller>
+    <controller type='pci' index='0' model='pci-root'>
+      <alias name='pci.0'/>
+    </controller>
+    <controller type='ide' index='0'>
+      <alias name='ide'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x1'/>
+    </controller>
+    <controller type='virtio-serial' index='0'>
+      <alias name='virtio-serial0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x0'/>
+    </controller>
+    <interface type='bridge'>
+      <mac address='52:54:00:e0:d1:b2'/>
+      <source bridge='br0'/>
+      <target dev='vnet0'/>
+      <model type='virtio'/>
+      <alias name='net0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x03' function='0x0'/>
+    </interface>
+    <serial type='pty'>
+      <source path='/dev/pts/0'/>
+      <target port='0'/>
+      <alias name='serial0'/>
+    </serial>
+    <console type='pty' tty='/dev/pts/0'>
+      <source path='/dev/pts/0'/>
+      <target type='serial' port='0'/>
+      <alias name='serial0'/>
+    </console>
+    <channel type='unix'>
+      <source mode='bind' path='/var/lib/libvirt/qemu/channel/target/domain-64-admin/org.qemu.guest_agent.0'/>
+      <target type='virtio' name='org.qemu.guest_agent.0' state='disconnected'/>
+      <alias name='channel0'/>
+      <address type='virtio-serial' controller='0' bus='0' port='1'/>
+    </channel>
+    <channel type='spicevmc'>
+      <target type='virtio' name='com.redhat.spice.0' state='disconnected'/>
+      <alias name='channel1'/>
+      <address type='virtio-serial' controller='0' bus='0' port='2'/>
+    </channel>
+    <input type='mouse' bus='ps2'>
+      <alias name='input0'/>
+    </input>
+    <input type='keyboard' bus='ps2'>
+      <alias name='input1'/>
+    </input>
+    <graphics type='spice' port='5900' autoport='yes' listen='127.0.0.1'>
+      <listen type='address' address='127.0.0.1'/>
+      <image compression='off'/>
+    </graphics>
+    <sound model='ich6'>
+      <alias name='sound0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x04' function='0x0'/>
+    </sound>
+    <video>
+      <model type='qxl' ram='65536' vram='65536' vgamem='16384' heads='1' primary='yes'/>
+      <alias name='video0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0'/>
+    </video>
+    <redirdev bus='usb' type='spicevmc'>
+      <alias name='redir0'/>
+    </redirdev>
+    <redirdev bus='usb' type='spicevmc'>
+      <alias name='redir1'/>
+    </redirdev>
+    <memballoon model='virtio'>
+      <alias name='balloon0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x08' function='0x0'/>
+    </memballoon>
+    <rng model='virtio'>
+      <backend model='random'>/dev/random</backend>
+      <alias name='rng0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x09' function='0x0'/>
+    </rng>
+  </devices>
+  <seclabel type='none' model='apparmor'/>
+</domain>
+
