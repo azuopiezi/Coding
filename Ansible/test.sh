@@ -91,4 +91,3 @@ defaults  handlers  LICENSE  meta  molecule  README.md  tasks  templates  vars
 [root@ansible ~]# ansible-galaxy remove geerlingguy.nginx
 - successfully removed geerlingguy.nginx
 [root@ansible ~]#
-
