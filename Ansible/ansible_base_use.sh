@@ -128,3 +128,130 @@ ansible-playbook -c +xxx.yml 文件用来检查语法是否正确
 在脚本中可以使用tags 标签 来指定某个动作执行
 ansible-playbook -t tags1，tags2 httpd.yml
 
+playbook 中变量使用
+变量名：仅能由字符、数字和下划线组成，且只能以字符开头
+变量来源：
+ 1.ansible setup facts 远程主机的所有变量都可以直接调用
+ 2.在/etc/ansible/hosts 中定义
+ 普通变量：主机组中主机单独定义，优先级高于公共变量
+ 公共(组)变量：针对主机组中所有主机定义统一变量
+
+
+"
+#hosts 中引用变量
+all:
+  hosts:
+    node1:
+      ansible_connection: ssh
+      ansible_host: 10.100.201.161
+      ansible_ssh_pass: Huayun@123
+      ansible_ssh_user: root
+      http_port: 80
+
+    node2:
+      ansible_connection: ssh
+      ansible_host: 10.100.201.162
+      ansible_ssh_pass: Huayun@123
+      ansible_ssh_user: root
+      http_port: 81
+  children:
+    hosts:
+      node1:
+      node2:
+"
+变量是http_port 在脚本中引用
+"
+#change.yml
+---
+- hosts: node1
+
+  tasks:
+    - name: set hostname
+      hostname: name=www{{ http_port }}.test.com
+"
+执行脚本 查看是否引用完成
+"
+[root@ansible ansible]# ansible-playbook change.yml
+
+PLAY [node1] *******************************************************************
+
+TASK [setup] *******************************************************************
+ok: [node1]
+
+TASK [set hostname] ************************************************************
+changed: [node1]
+
+PLAY RECAP *********************************************************************
+node1                      : ok=2    changed=1    unreachable=0    failed=0
+
+[root@ansible ansible]# ansible node1 -m shell -a "hostnamectl"
+node1 | SUCCESS | rc=0 >>
+   Static hostname: www80.test.com
+         Icon name: computer-vm
+           Chassis: vm
+        Machine ID: 91b7f0cb876448cb976ffe4c3c2baedd
+           Boot ID: e653734b65d54c1d8f8cd2297be7892d
+    Virtualization: vmware
+  Operating System: CentOS Linux 7 (Core)
+       CPE OS Name: cpe:/o:centos:centos:7
+            Kernel: Linux 3.10.0-862.el7.x86_64
+      Architecture: x86-64
+"
+ 3.通过命令行指定变量，优先级最高
+  ansible-playbook --e varname=value
+
+
+
+"
+ansible all -m setup  #输出远程主机中的变量
+查看某一个变量信息可以使用filter 过滤出来
+[root@ansible ~]# ansible all -m setup -a "filter=ansible_hostname"
+node2 | SUCCESS => {
+    "ansible_facts": {
+        "ansible_hostname": "bbs"
+    },
+    "changed": false
+}
+node1 | SUCCESS => {
+    "ansible_facts": {
+        "ansible_hostname": "bbs"
+    },
+    "changed": false
+}
+"
+对变量赋值 可以在执行语句时 直接-e 后面跟上变量名=值名 进行
+ansible-playbook -e "var1=value1" xxx.yml
+比如：
+"
+---
+- hosts: appname
+  remote_user: root
+
+  tasks:
+    - name: install paakage
+      yum: name={{ var1 }}
+    - name: start service
+      service: name={{ var1 }} state=started enalbed=yes
+
+ansible-playbook -e "var1=value1" xx.yml
+"
+
+ 4.在playbook中定义
+    vars:
+    - var1：value1
+    - var2: value2
+"
+  ---
+- hosts: appname
+  remote_user: root
+  vars:
+    - var1: httpd
+  tasks:
+    - name: install paakage
+      yum: name={{ var1 }}
+    - name: start service
+      service: name={{ var1 }} state=started enalbed=yes
+
+ansible-playbook xxx.yml
+"
+  5.在role中定义
