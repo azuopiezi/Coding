@@ -91,3 +91,40 @@ defaults  handlers  LICENSE  meta  molecule  README.md  tasks  templates  vars
 [root@ansible ~]# ansible-galaxy remove geerlingguy.nginx
 - successfully removed geerlingguy.nginx
 [root@ansible ~]#
+
+执行 playbook 时 如果命令或者脚本的退出码不为零，可以使用如下方式替代
+tasks:
+  - name: run this command and ignore the resule
+    shell: /usr/bin/somecommand || /bin/true
+或者使用ignore_errors 来忽略错误信息：
+tasks:
+  - name: run this command and ignore the resule
+    shell: /usr/bin/somecommand
+    ignore_errors: True
+
+handlers 和notify 结合使用触发条件
+Handlers
+是task列表，这些task与前述的task并没有本质上的不同，用于当关注的资源发生变化时，才会采取一定的操作
+Notify此action可用于在每个play的最后被触发，这样可避免多次有改变发生时每次都执行指定的操作，
+仅在所有的变化发生完成后一次性的执行指定操作。在notify中列出的操作称为handler，也即notify中调用handler中定义的操作
+"
+- hosts: websrvs
+  remote_user: root
+  tasks:
+    - name: install httpd package
+      yum: name=httpd
+    - name: copy conf file
+      copy: scr=files/httpd.conf dest=/etc/httpd/conf backup=yes
+      notify: restart service
+    - name: start service
+      service: name=httpd state=started enable=yes
+  handlers:
+    - name: restart service
+      service: name=httpd state=restarted
+
+##备注 notify 可以出发多个action
+ansible-playbook -c +xxx.yml 文件用来检查语法是否正确
+"
+在脚本中可以使用tags 标签 来指定某个动作执行
+ansible-playbook -t tags1，tags2 httpd.yml
+
