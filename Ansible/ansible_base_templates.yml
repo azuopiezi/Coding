@@ -1,3 +1,4 @@
+
 模板templates
 文件文件，嵌套有脚本(使用模板变成语言编写)
 Jinja2语言，使用字面量，有下面形式
@@ -12,3 +13,230 @@ Jinja2语言，使用字面量，有下面形式
 逻辑运算：and,or,not
 流表达式：For If When
 
+http://jinja.pocoo.org/docs/
+
+下面是写的一个nginx 安装的yml文件
+"
+---
+-hosts: nodes
+
+ tasks:
+   - name: install nginx package
+     yum: name=nginx
+   - name: create tempate
+     template:
+     src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
+   - name: start nginx service
+     service: name=nginx state=started enabled=yes
+"
+如果修改
+   nginx.conf.j2 中的变量 文件,根据每台主机的cpu修改work进程数量 且端口号也是根据hosts 的http_port端口号来搞变量
+"
+ ansible nodes -m setup |grep cpu
+        "ansible_processor_vcpus": 2
+        "ansible_processor_vcpus": 2
+
+[root@ansible ansible]# ansible nodes -m setup |grep cpu
+        "ansible_processor_vcpus": 2,
+        "ansible_processor_vcpus": 2,
+[root@ansible ansible]# egrep -v '#|^$' templates/nginx.conf.j2
+"
+user nginx;
+#这里是修改的变量，变量是ansible -m setup 中取出的机器的cpu核数
+worker_processes {{ ansible_processor_vcpus*2 }};
+error_log /var/log/nginx/error.log;
+pid /run/nginx.pid;
+include /usr/share/nginx/modules/*.conf;
+events {
+    worker_connections 1024;
+}
+http {
+    log_format  main  '$remote_addr - $remote_user [$time_local] $request '
+                      '$status $body_bytes_sent $http_referer'
+                      '$http_user_agent" "$http_x_forwarded_for';
+    access_log  /var/log/nginx/access.log  main;
+    sendfile            on;
+    tcp_nopush          on;
+    tcp_nodelay         on;
+    keepalive_timeout   65;
+    types_hash_max_size 2048;
+    include             /etc/nginx/mime.types;
+    default_type        application/octet-stream;
+    include /etc/nginx/conf.d/*.conf;
+    server {
+#http_port 变量条用的是hosts 中的变量
+        listen       {{ http_port } default_server;
+        listen       [::]:{{ http_port }} default_server;
+        server_name  _;
+        root         /usr/share/nginx/html;
+        include /etc/nginx/default.d/*.conf;
+        location / {
+        }
+        error_page 404 /404.html;
+            location = /40x.html {
+        }
+        error_page 500 502 503 504 /50x.html;
+            location = /50x.html {
+        }
+    }
+}
+"
+template_nginx.yml 内容如下：执行即可，这里用了一个handlers ,并且限制了目标的操作系统版本号，根据版本号来确定copy 哪个templates
+  ansible node1 -m setup |grep ansible_distribution_major_version
+ "ansible_distribution_major_version": "7",
+ "
+---
+- hosts: nodes
+
+  tasks:
+    - name: install nginx package
+      yum: name=nginx
+    - name: create tempate
+      template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
+#when 又对目标主机中了对应的限制
+      when: ansible_distribution_major_version == "7"
+      notify: restart nginx service
+    - name: start nginx service
+      service: name=nginx state=started enabled=yes
+  handlers:
+    - name: restart nginx service
+      service: name=nginx state=restarted
+" "
+
+testitem.yml 用迭代的方式来写
+"
+ testitem.yml
+
+---
+- hosts: nodes
+
+
+  tasks:
+    - name: judge a dir is exits
+      shell: ls /data
+      ignore_errors: True
+      register: result
+    - name: /data no exit mkdir /data
+      file:  path=/data state=directory mode='0777'
+      when: result | failed
+
+    - name: create some files
+      file: name=/data/{{ item }} state=touch
+      with_items:
+        - file1
+        - file2
+        - file3
+
+"
+ 执行过程如下
+"
+[root@ansible ansible]# ansible-playbook testitem.yml
+
+PLAY [nodes] *******************************************************************
+
+TASK [setup] *******************************************************************
+ok: [node1]
+ok: [node2]
+
+TASK [judge a dir is exits] ****************************************************
+fatal: [node1]: FAILED! => {"changed": true, "cmd": "ls /data", "delta": "0:00:00.007688", "end": "2020-09-14 18:15:26.907315", "failed": true, "rc": 2, "start": "2020-09-14 18:15:26.899627", "stderr": "ls: cannot access /data: No such file or directory", "stdout": "", "stdout_lines": [], "warnings": []}
+...ignoring
+fatal: [node2]: FAILED! => {"changed": true, "cmd": "ls /data", "delta": "0:00:00.006864", "end": "2020-09-14 18:15:26.273506", "failed": true, "rc": 2, "start": "2020-09-14 18:15:26.266642", "stderr": "ls: cannot access /data: No such file or directory", "stdout": "", "stdout_lines": [], "warnings": []}
+...ignoring
+"
+TASK [/data no exit mkdir /data] ***********************************************
+changed: [node1]
+changed: [node2]
+
+TASK [create some files] *******************************************************
+changed: [node1] => (item=file1)
+changed: [node2] => (item=file1)
+changed: [node1] => (item=file2)
+changed: [node2] => (item=file2)
+changed: [node1] => (item=file3)
+changed: [node2] => (item=file3)
+
+PLAY RECAP *********************************************************************
+node1                      : ok=4    changed=3    unreachable=0    failed=0
+node2                      : ok=4    changed=3    unreachable=0    failed=0
+"
+
+迭代嵌套子变量
+
+"
+---
+- hosts: nodes
+
+
+  tasks:
+    - name: add some groups
+      group: name={{ item }} state=present
+      with_items:
+      - group1
+      - group2
+      - group3
+    - name: add some users in groups each
+      user: name={{ item.name }} group={{ item.group }} state=present
+      with_items:
+      - {name: 'user1',group: 'group1'}
+      - {name: 'user2',group: 'group2'}
+      - {name: 'user3',group: 'group3'}
+
+"
+
+getent passwd  getent 使用方法
+
+template 中可以引入 for 和if 循环
+
+template 下面的配置j2 文件
+  "
+  [root@ansible ansible]# cat templates/for2.conf.j2
+  {% for p in ports %}
+    server {
+            listen:  {{ p.port }}
+            servername:  {{ p.name }}
+            serverpath:  {{ p.path }}
+  }
+  {% endfor %}
+  "
+
+yml 文件如下
+
+"
+ cat testfor1.yml
+---
+- hosts: nodes
+  vars:
+    ports:
+      - web1:
+        port: 81
+        name: web1.test.com
+        path: /data/path1
+      - web2:
+        port: 82
+        name: web2.test.com
+        path: /data/path2
+      - web3:
+        port: 83
+        name: web3.test.com
+        path: /data/path3
+
+
+  tasks:
+    - name: copy conf
+      template: src=for2.conf.j2 dest=/data/for2.conf
+"
+含有if 条件的语句
+"
+cat templates/for3.conf.j2
+{% for p in ports %}
+  server {
+          listen:  {{ p.port }}
+{% if p.name is defined %}
+           servername: {{ p.name }}
+{% endif %}
+          serverpath:  {{ p.path }}
+}
+{% endfor %}
+
+"
