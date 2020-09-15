@@ -129,3 +129,97 @@ http {
 "
 playbook 中可以添加tag 标签，在应用中直接调用某个tag 标签，运行含有标签的任务
 
+
+app 安装httpd role 角色，下面是一个role角色
+执行角色
+[root@ansible ansible]# ansible-playbook app_roles.yml
+"
+[root@ansible ansible]# cat app_roles.yml
+- hosts: nodes
+
+  roles:
+    - role: app
+"
+
+"
+[root@ansible ansible]# tree roles/app/
+roles/app/
+├── files
+│   └── vhosts.conf
+├── handlers
+│   └── main.yml
+├── tasks
+│   ├── copyfile.yml
+│   ├── group.yml
+│   ├── main.yml
+│   ├── start.yml
+│   ├── temp.yml
+│   ├── user.yml
+│   └── yum.yml
+├── templates
+│   └── httpd.conf.j2
+└── vars
+    └── main.yml
+
+"
+查看文件内容
+
+"
+[root@ansible tasks]# cat copyfile.yml
+---
+- name: copy config
+  copy: src=vhosts.conf dest=/etc/httpd.conf.d/ owner=app
+[root@ansible tasks]# cat group.yml
+---
+- name: create group
+  group: name=app gid=83
+[root@ansible tasks]# cat main.yml
+---
+- include: group.yml
+- include: user.yml
+- include: yum.yml
+- include: temp.yml
+- include: copyfile.yml
+- include: start.yml
+[root@ansible tasks]# cat start.yml
+---
+- name: start service
+  service: name=httpd state=started enabled=yes
+[root@ansible tasks]# cat temp.yml
+---
+- name: copy conf
+  template: src=httpd.conf.j2 dest=/etc/httpd/conf/httpd.conf
+  notify: restart service
+[root@ansible tasks]# cat user.yml
+---
+- name: create user
+  user: name=app group=app system=yes shell=/sbin/nologin uid=83
+[root@ansible tasks]# cat yum.yml
+---
+- name: install package
+  yum: name=httpd
+[root@ansible tasks]#
+[root@ansible tasks]# ls
+copyfile.yml  group.yml  main.yml  start.yml  temp.yml  user.yml  yum.yml
+[root@ansible tasks]# cd ..
+[root@ansible app]# ls
+files  handlers  tasks  templates  vars
+[root@ansible app]# cat files/vhosts.conf
+[root@ansible app]# cat handlers/main.yml
+---
+- name: restart service
+  service: name=httpd state=restarted
+[root@ansible app]# cat templates/httpd.conf.j2
+
+"
+[root@ansible app]# ls
+files  handlers  tasks  templates  vars
+
+定义变量文件
+
+"
+[root@ansible app]# cat vars/main.yml
+---
+username: app
+groupname: app
+"
