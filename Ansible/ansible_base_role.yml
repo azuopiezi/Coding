@@ -1,0 +1,131 @@
+role 的思想：用于层次性，结构化地组织playbook。roles 能够根据层次型结构自动装载变量文件、task以及handlers 等。
+要使用role只需要在playbook中使用include指令即可。简单来讲，role就是通过分别将变量、文件、任务、模板以处理器放置于单独的目录中，
+并可以便捷地include它们的一种机制。角色一般用于基于主机构建服务的场景中，但也可以是用于构建守护进程等场景中
+
+复杂场景：建议使用roles，代码复用度高
+变更指定主机或主机组
+如命名不规范维护和传承成本大
+某些功能需要多个playbook，通过include即可实现
+
+nginx
+1.group:group
+2.user:user
+3.yum: nginx
+4.templates:
+5.service:
+
+最终执行的文件脚本
+"
+[root@ansible ansible]# ansible-playbook nginx_roles.yml
+"
+查看角色这个里面执行定义了一个角色nginx
+
+"
+[root@ansible ansible]# cat nginx_roles.yml
+- hosts: nodes
+
+  roles:
+    - role: nginx
+[root@ansible ansible]# pwd
+/etc/ansible
+"
+
+此文件中定义了nginx这个角色中的tasks和templates，
+"
+[root@ansible ansible]# tree roles/nginx/
+roles/nginx/
+├── tasks
+│   ├── group.yml
+│   ├── main.yml
+│   ├── RestartService.yml
+│   ├── StartService.yml
+│   ├── template.yml
+│   ├── user.yml
+│   └── yum.yml
+└── templates
+    └── nginx.conf.j2
+
+2 directories, 8 files
+"
+[root@ansible ansible]#
+
+任务列表如下
+"
+[root@ansible tasks]# cat group.yml
+---
+- name: create group
+  group: name=nginx gid=82
+[root@ansible tasks]# cat main.yml
+---
+- include: group.yml
+- include: user.yml
+- include: yum.yml
+- include: template.yml
+- include: StartService.yml
+[root@ansible tasks]# cat RestartService.yml
+---
+- name: service restart
+  service: name=nginx state=restarted
+[root@ansible tasks]# cat StartService.yml
+---
+- name: service start
+  service: name=nginx state=started enabled=yes
+[root@ansible tasks]# cat yum.yml
+---
+- name: install package
+  yum: name=nginx
+[root@ansible tasks]# cat user.yml
+---
+- name: create user
+  user: name=nignx uid=82 group=nginx system=yes shell=/sbin/nologin state=present
+[root@ansible tasks]# cat template.yml
+---
+- name: copy conf
+  template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
+"
+nginx.conf.j2的模板文件
+"
+[root@ansible nginx]# cat templates/nginx.conf.j2
+user nginx;
+worker_processes {{ ansible_processor_vcpus*2 }};
+error_log /var/log/nginx/error.log;
+pid /run/nginx.pid;
+include /usr/share/nginx/modules/*.conf;
+events {
+    worker_connections 1024;
+}
+http {
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+    access_log  /var/log/nginx/access.log  main;
+    sendfile            on;
+    tcp_nopush          on;
+    tcp_nodelay         on;
+    keepalive_timeout   65;
+    types_hash_max_size 2048;
+    include             /etc/nginx/mime.types;
+    default_type        application/octet-stream;
+    include /etc/nginx/conf.d/*.conf;
+    server {
+        listen       {{ http_port }} default_server;
+        listen       [::]:{{ http_port }} default_server;
+        server_name  _;
+        root         /usr/share/nginx/html;
+        include /etc/nginx/default.d/*.conf;
+        location / {
+        }
+        error_page 404 /404.html;
+            location = /40x.html {
+        }
+        error_page 500 502 503 504 /50x.html;
+            location = /50x.html {
+        }
+    }
+}
+
+"
+- include: /path/+'绝对路径'+/xxx.yml 这样可以跨role 进行调用
+"
+playbook 中可以添加tag 标签，在应用中直接调用某个tag 标签，运行含有标签的任务
+
