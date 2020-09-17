@@ -21,7 +21,7 @@
 - name: wait for chronyd status is ok
   shell: chronyc sources |grep "\*" |wc -l
   register: chronyc_sources_result
-  until: chronyc_sources_result == '1'
+  until: chronyc_sources_result.stdout == '1'
   retries: 10
   delay: 5
 
