@@ -3,6 +3,11 @@
   lineinfile:
     dest: /etc/chrony.conf
     regexp: '^server .* iburst'
+    state: absent
+- name: set chrony server in chrony.conf
+  lineinfile:
+    dest: /etc/chrony.conf
+    regexp: '^server .* iburst'
     line: 'server 127.127.1.1 iburst'
 
 - name: set allow in chrony.conf
