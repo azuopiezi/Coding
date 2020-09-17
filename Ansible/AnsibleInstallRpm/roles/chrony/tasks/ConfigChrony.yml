@@ -4,6 +4,8 @@
     dest: /etc/chrony.conf
     regexp: '^server .* iburst'
     state: absent
+
+
 - name: set chrony server in chrony.conf
   lineinfile:
     dest: /etc/chrony.conf
