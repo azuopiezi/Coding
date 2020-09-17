@@ -1,0 +1,4 @@
+---
+# handlers file for roles/chronyd
+- name: restart chrony service
+  service: name=chrony state=restarted
