@@ -1,7 +1,6 @@
 #!/bin/bash
-set -x
+set -o
 cd /etc/ansible/roles/Coding
 git checkout .
 git pull
 sleep 1
-  
