@@ -8,7 +8,7 @@
   lineinfile:
     dest: /etc/chrony.conf
     regexp: '^server .* iburst'
-    line: 'server 127.127.1.1 iburst'
+    line: 'server {{ hosts.node1.ansible_hosts }} iburst'
 
 - name: set allow in chrony.conf
   lineinfile:
