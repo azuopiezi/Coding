@@ -1,0 +1,20 @@
+---
+- name: get dir install
+  shell: pwd
+  register: install_dir
+- name: install rpm
+  yum: name=files/hycloud-1.0.0-1.el7.centos.x86_64.rpm state=present
+  register: pkg_init_result
+  until: pkg_init_result|success
+  retries: 3
+  delay: 5
+  when: INSTALL_ALL_PACKAGE
+
+
+- name: config hycloud
+  lineinfile: dest=/etc/hycloud/hycloud.conf regexp={{ item.regexp }} line={{ item.line }}
+  with_item:
+    - { regexp: '^conf', line: 'conf={{ install_dir.stdout }}' }
+
+#lineinfile 的用法
+#ansible nodes -m lineinfile -a "dest=/etc/selinux/config regexp=SELINUX=enable line=SELINUX=disabled"
