@@ -1,4 +1,4 @@
 ---
 # vars file for roles/chronyd
 #- name: set chrony server ip address
-chrony_server：10.100.201.161
+- include: Chrony_server.yml
