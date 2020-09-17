@@ -1,0 +1,7 @@
+---
+# tasks file for roles/chronyd
+- include: InstallChrony.yml
+- include: Temp.yml
+- include: ConfigChrony.yml
+- include: ServiceChrony.yml
+- include: UnstallChrony.yml

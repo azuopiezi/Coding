@@ -1,0 +1,6 @@
+---
+- name: chrony install rpm
+  yum: name=chrony state=present
+  tags:
+    - Install
+    - InstallChrony
