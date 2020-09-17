@@ -1,6 +1,0 @@
----
-- name: chronyd install rpm
-  yum: name=chronyd state=present
-  tags:
-    - Install
-    - InstallChronyd
