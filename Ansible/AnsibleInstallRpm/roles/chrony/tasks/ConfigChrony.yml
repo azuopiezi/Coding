@@ -10,7 +10,7 @@
   lineinfile:
     dest: /etc/chrony.conf
     regexp: '^server .* iburst'
-    line: 'server {{ node1.ansible_host }} iburst'
+    line: 'server {{ ansible_host }} iburst'
 
 - name: set allow in chrony.conf
   lineinfile:
