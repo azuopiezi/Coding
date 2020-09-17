@@ -10,7 +10,12 @@
   lineinfile:
     dest: /etc/chrony.conf
     regexp: '^server .* iburst'
-    line: 'server {{ ansible_host }} iburst'
+    line: 'server {{ chrony_server }} iburst'
+
+
+    line: '{% for item in groups.Controller %}{% if item == groups.Controller[0] %}server {{ hostvars[item].ansible_host }} iburst{% endif %}{% endfor %}'
+  when: ansible_hostname not in groups.Controller[0]
+
 
 - name: set allow in chrony.conf
   lineinfile:
