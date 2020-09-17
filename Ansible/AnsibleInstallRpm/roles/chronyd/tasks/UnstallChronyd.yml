@@ -1,0 +1,7 @@
+---
+# tasks file for roles/chronyd
+- name: unstall chronyd rpm
+  yum: name=chronyd state=absent
+  tags:
+    - Unstall
+    - Unstall_chronyd
