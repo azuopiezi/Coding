@@ -5,17 +5,11 @@
     regexp: '^server .* iburst'
     state: absent
 
-
 - name: set chrony server in chrony.conf
   lineinfile:
     dest: /etc/chrony.conf
     regexp: '^server .* iburst'
     line: 'server {{ chrony_server_ip }} iburst'
-
-
-#    line: '{% for item in groups.Controller %}{% if item == groups.Controller[0] %}server {{ hostvars[item].ansible_host }} iburst{% endif %}{% endfor %}'
-#  when: ansible_hostname not in groups.Controller[0]
-
 
 - name: set allow in chrony.conf
   lineinfile:
@@ -23,5 +17,16 @@
     regexp: '^allow'
     line: 'allow {{ ansible_ens192.ipv4.network }}/{{ 24 }}'
   notify: restart chrony service
+
+- name: wait for chronyd status is ok
+  shell: chronyc sources |grep "\*" |wc -l
+  register: chronyc_sources_result
+  until: chronyc_sources_result == '1'
+  retries: 10
+  delay: 5
+
+- name: sync hwclock
+  shell: hwclock -w
+  ignore_errors: yes
 
 
