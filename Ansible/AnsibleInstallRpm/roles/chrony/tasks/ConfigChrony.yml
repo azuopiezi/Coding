@@ -1,1 +1,15 @@
 ---
+- name: remove server from chrony.conf
+  lineinfile:
+    dest: /etc/chrony.conf
+    regexp: '^server .* iburst'
+    line: 'server 127.127.1.1 iburst'
+
+- name: set allow in chrony.conf
+  lineinfile:
+    dest: /etc/chrony.conf
+    regexp: '^allow'
+    line: 'allow {{ ansible_ens192.ipv4.network }}/{{ 24 }}'
+  notify: restart chrony service
+
+
