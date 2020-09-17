@@ -1,5 +1,5 @@
 #!/bin/bash
-set -o
+set -x
 cd /etc/ansible/roles/Coding
 git checkout .
 git pull
