@@ -1,1 +1,1 @@
-chrony_server: 10.100.201.161
+chrony_server_ip: "10.100.201.161"
