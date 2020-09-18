@@ -12,7 +12,7 @@
       when: file_result|failed
 
     - name: insert lineinfile in file
-      marker: "ANSIBLE INJECTED  NODE SSH FOR {{ hostvars[item].ansible_host }}"
+      marker: "ANSIBLE INJECTED  NODE SSH FOR "
       blockinfile:
         dest: /opt/block.txt
         block: |
