@@ -6,10 +6,9 @@ git commit -m "${CommitMessage}"
 
 #git 到远端服务器上 需要输入用户名和密码
 
-git push
-expect
-{
-  "Username*" { send "azuopiezi\r";exp_continue }
-  "Password*" {send "sX209@^Yj\r"}
+spawn git push
+expect{
+  "Username*:" {send "azuopiezi\r";exp_continue}
+  "Password*:" {send "sX209@^Yj\r"}
 }
  expect eof
