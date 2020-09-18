@@ -1,0 +1,17 @@
+---
+- hosts: all
+
+  tasks:
+    - name: create a file in opt
+      shell: ls /opt/block.txt
+      ignore_errors: True
+      register: file_result
+      file: path=/opt/block.txt state=touch mode=0777
+      when: file_result.stdout == 'failed'
+    - name: insert lineinfile in file
+      blockinfile:
+        dest: /opt/block.txt
+        block: |
+          block1
+          block2
+          block3
