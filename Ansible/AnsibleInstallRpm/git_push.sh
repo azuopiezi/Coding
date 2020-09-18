@@ -1,6 +1,6 @@
 #!/usr/bin/expect -f
 set -x
-git add .
+git add -A
 read -p "请输入commit 信息": CommitMessage
 git commit -m "${CommitMessage}"
 
