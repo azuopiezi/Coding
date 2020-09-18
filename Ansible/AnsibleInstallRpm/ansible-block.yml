@@ -2,13 +2,17 @@
 - hosts: all
 
   tasks:
-    - name: create a file in opt
+    - name: judge file is exits
       shell: ls /opt/block.txt
       ignore_errors: True
       register: file_result
+
+    - name: if file no exits create a file
       file: path=/opt/block.txt state=touch mode=0777
-      when: file_result.stdout == 'failed'
+      when: file_result|failed
+
     - name: insert lineinfile in file
+      marker: "ANSIBLE INJECTED  NODE SSH FOR {{ hostvars[item].ansible_host }}"
       blockinfile:
         dest: /opt/block.txt
         block: |
