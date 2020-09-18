@@ -8,8 +8,8 @@ git commit -m "${CommitMessage}"
 
 spawn git push
 
-expect{
-  "*Username*:" {send "azuopiezi\r";exp_continue}
-  "*Password*:" {send "sX209@^Yj\r"}
+expect {
+  "*Username*:" { send "azuopiezi\r";exp_continue } 
+  "*Password*:" { send "sX209@^Yj\r" }
 }
 interact
