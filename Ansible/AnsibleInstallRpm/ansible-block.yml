@@ -3,9 +3,10 @@
 
   tasks:
     - name: judge file is exits
-      shell: ls /opt/block.txt
+      stat: path=/opt/block.txt
       ignore_errors: True
       register: file_result
+
     - name: print the file is not exits
       debug:
         msg: "the file not exits"
@@ -13,8 +14,8 @@
     - name: print the file is exits
       debug:
         msg: "the file is exits"
-
       when: file_result|failed
+
     - name: if file no exits create a file
       file: path=/opt/block.txt state=touch mode=0777
       when: file_result|failed
