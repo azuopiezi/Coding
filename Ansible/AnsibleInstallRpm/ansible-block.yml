@@ -10,7 +10,11 @@
       debug:
         msg: "the file not exits"
       when: file_result|failed
+    - name: print the file is exits
+      debug:
+        msg: "the file is exits"
 
+      when: file_result|failed
     - name: if file no exits create a file
       file: path=/opt/block.txt state=touch mode=0777
       when: file_result|failed
