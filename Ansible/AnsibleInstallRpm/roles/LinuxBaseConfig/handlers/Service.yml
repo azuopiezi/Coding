@@ -1,0 +1,4 @@
+---
+# handlers file for roles/LinuxBaseConfig
+- name: restart sshd service
+  service: name=sshd.service state=restarted enabled=yes
