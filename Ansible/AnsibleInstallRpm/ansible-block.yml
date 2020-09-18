@@ -12,9 +12,10 @@
       when: file_result|failed
 
     - name: insert lineinfile in file
-      marker: "ANSIBLE INJECTED  NODE SSH FOR "
+
       blockinfile:
         dest: /opt/block.txt
+        marker: "ANSIBLE INJECTED  NODE SSH FOR "
         block: |
           block1
           block2
