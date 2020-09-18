@@ -1,0 +1,21 @@
+---
+- name: set time zone
+  shell: timedatectl  set-timezone Asia/Shanghai
+
+- name: stop networkmager
+  service: name=NetworkManager state=stopped enabled=no
+
+- name: Check if firewalld is installed
+  stat: path=/usr/lib/systemd/system/firewalld.service
+  register: fw_file
+
+- name: change sshd
+  shell: sed -i -e 's/.*UseDNS.*/UseDNS no/g' -e 's/.*GSSAPIAuthentication.*/GSSAPIAuthentication no/g' /etc/ssh/sshd_config
+  notify: restart sshd service
+
+- name: Disable firewalled if it is installed
+  service: name=firewalld.service state=stopped enabled=no
+  when: fw_file.stat.exists != False
+
+- name: Update selinux config to Disabled mode
+  selinux: policy=targeted state=disabled
