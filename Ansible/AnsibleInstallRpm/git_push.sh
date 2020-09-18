@@ -1,18 +1,12 @@
 #!/bin/bash
 set -x
-CommitName=
-git commit -a -m "$CommitName"
-git add -a -m "LinuxBaseConfig"
-git add -a
-git add -A
-git add -a -m "LinuxBaseConfig"
-git commit -a -m "LinuxBaseConfig"
-git push 
-git push .
-git help config
-git push --help 
-git push all
-git push origin HEAD:master
-git config --global push.default simple
-git push origin HEAD:master
+read -p "请输入文件路径或者文件目录": Path
+git add ${Path}
+read -p "请输入commit 信息": CommitMessage
+git commit -m "${CommitMessage}"
+
+#git 到远端服务器上 需要输入用户名和密码
+echo “username=azuopiezi,password=sX209@^Yj”
+git push
+
 
