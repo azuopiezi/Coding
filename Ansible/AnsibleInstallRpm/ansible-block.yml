@@ -6,16 +6,19 @@
       shell: ls /opt/block.txt
       ignore_errors: True
       register: file_result
+    - name: print the file is not exits
+      debug:
+        msg: "the file not exits"
+      when: file_result|failed
 
     - name: if file no exits create a file
       file: path=/opt/block.txt state=touch mode=0777
       when: file_result|failed
 
     - name: insert lineinfile in file
-
       blockinfile:
         dest: /opt/block.txt
-        marker: "ANSIBLE INJECTED  NODE SSH FOR "
+        marker: "ANSIBLE INJECTED  NODE SSH FOR"
         block: |
           block1
           block2
