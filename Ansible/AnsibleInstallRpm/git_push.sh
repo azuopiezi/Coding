@@ -1,7 +1,7 @@
 #!/bin/bash
 set -x
 read -p "请输入文件路径或者文件目录": Path
-git add ${Path}
+git add .
 read -p "请输入commit 信息": CommitMessage
 git commit -m "${CommitMessage}"
 
