@@ -8,3 +8,11 @@
         line: "{{ ansible_default_ipv4.address }} {{ ansible_hostname }}"
     - debug:
         msg: "{{ ansible_default_ipv4.address }} {{ ansible_hostname }}"
+
+    - name: set /etc/hosts all ip and hostname
+      lineinfile:
+        dest: /etc/hosts
+        line: |
+          {{ hostvars[item].ansible_host }} {{ item }}
+      with_items: "hosts"
+
