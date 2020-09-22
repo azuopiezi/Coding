@@ -1,0 +1,6 @@
+---
+- hosts: all
+
+  tasks:
+    -name: change /etc/hosts
+     lineinfile: dest=/etc/hosts line={{ ansible_all_ipv4_addresses }} {{ ansible_hostname }}
