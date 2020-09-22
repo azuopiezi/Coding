@@ -2,15 +2,15 @@
 - hosts: all
 
   tasks:
-
-
-
     - name: register hosts
       set_fact:
         hosts: "{{ groups.nodes| unique | list }}"
 #如果多个组可以如下添加方式
 #        hosts: "{{ groups.tomcat + groups.redis + groups.nginx + groups.mysql + groups.Rabbitmq | unique | list }}"
 ##/etc/hosts 中添加本机的ip和主机名称对应表
+
+    - name: change name
+      shell: hostnamectl set-hostname {{inventory_hostname}}
 
     - name: change /etc/hosts
       lineinfile:
@@ -27,6 +27,6 @@
         regexp: '^{{ hostvars[item].ansible_host }}'
         line: |
           {{ hostvars[item].ansible_host }} {{ item }}
+#可以这样写
+#        line: "{{ hostvars[item].ansible_host }} {{ item }}"
       with_items: "{{ hosts }}"
-
-
