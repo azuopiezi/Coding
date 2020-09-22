@@ -24,6 +24,7 @@
     - name: set /etc/hosts all ip and hostname
       lineinfile:
         dest: /etc/hosts
+        regexp: '^{{ hostvars[item].ansible_host }}'
         line: |
           {{ hostvars[item].ansible_host }} {{ item }}
       with_items: "{{ hosts }}"
