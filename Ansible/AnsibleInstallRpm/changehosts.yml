@@ -2,5 +2,9 @@
 - hosts: all
 
   tasks:
-    -name: change /etc/hosts
-     lineinfile: dest=/etc/hosts line={{ ansible_all_ipv4_addresses }} {{ ansible_hostname }}
+    - name: change /etc/hosts
+      lineinfile:
+        dest: /etc/hosts
+        line: "{{ ansible_default_ipv4.address }} {{ ansible_hostname }}"
+    - debug:
+        msg: "{{ ansible_default_ipv4.address }} {{ ansible_hostname }}"
