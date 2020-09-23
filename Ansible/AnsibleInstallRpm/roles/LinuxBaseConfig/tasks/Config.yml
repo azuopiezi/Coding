@@ -6,6 +6,7 @@
 #    var: timezone_result.stdout
 ##msg 和var 不能同时 用在debug 中，var 现在是注销 的状态，也可以用，不过得把msg 注销掉
     msg: "Print the timezone is {{ timezone_result.stdout }}"
+    ignore_errors: yes
 
 - name: change timezone for "Asia/Shanghai"
   shell: timedatectl set-timezone Asia/Shanghai
