@@ -1,6 +1,15 @@
 ---
-- name: set time zone
-  shell: timedatectl  set-timezone Asia/Shanghai
+- name: check timezone
+  shell: timedatectl  |grep "Time zone" |awk '{print $3}'
+  register: timezone_result
+- debug:
+    var: timezone_result.stdout
+    msg: "The," timezone_result.stdout
+  when: timezone_result.stdout !== "Asia/Shanghai"
+
+- name: change timezone for "Asia/Shanghai"
+  shell: timedatectl set-timezone Asia/Shanghai
+  when: timezone_result.stdout !== "Asia/Shanghai"
 
 - name: stop networkmager
   service: name=NetworkManager state=stopped enabled=no
