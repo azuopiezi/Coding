@@ -1,7 +1,7 @@
 ---
 - hosts: all
   tasks:
-    - name: line more line=
+    - name: line more line
       lineinfile:
         dest: /opt/block.txt
         regexp: line1
