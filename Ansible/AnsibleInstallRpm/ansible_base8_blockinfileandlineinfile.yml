@@ -1,0 +1,31 @@
+---
+- hosts: all
+
+  tasks:
+    - name: judge file is exits
+      stat: path=/opt/block.txt
+      ignore_errors: True
+      register: file_result
+
+    - debug:
+        msg: "the block.txt not exists"
+      when: file_result.stat.exists != True
+    - debug:
+        msg: "the block.txt is exists"
+      when: file_result.stat.exists != False
+
+
+    - name: the block.txt is not exists and create the file
+      file: path=/opt/block.txt state=touch mode=0777
+      when: file_result.stat.exists != True
+
+
+    - name: insert lineinfile in file
+      blockinfile:
+        dest: /opt/block.txt
+        state: absent
+        marker: "ANSIBLE INJECTED  NODE SSH FOR"
+        block: |
+          block1
+          block2
+          block3
