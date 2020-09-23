@@ -1,0 +1,39 @@
+---
+- hosts: nodes
+  tasks:
+"
+#使用meta模块，headlers会在它所对应的task任务执行完后立即被触发并执行，即在playbook的中间环节运行
+#默认情况下，所有的task执行完毕后，才会执行各个handles，并不是执行完某个task后，立即执行相应的handler，如果想要在执行完某些task以后立即执行对应的handlre，那么需要使用meta模块
+"
+    - name: create file1
+      file: path=/opt/file1 state=directory
+      notify: change mode1
+    - debug:
+        msg: "create file1"
+    - name: create file2
+      file: path=/opt/file2 state=directory
+      notify: change mode2
+    - debug:
+        msg: "create file2"
+    - name: create file3
+    file: path=/opt/file3 state=directory
+    notify: change mode3
+    - debug:
+        msg: "create file3"
+    - name: create file4
+      file: path=/opt/file4 state=directory
+      notify: change mode4
+    - debug:
+        msg: "create file4"
+  handlers:
+    - name: change mode1
+      file: path=/opt/file1/file1.txt state=touch mode=777 owner=root group=root
+
+    - name: change mode2
+      file: path=/opt/file1/file2.txt state=touch mode=777 owner=root group=root
+
+    - name: change mode3
+      file: path=/opt/file1/file3.txt state=touch mode=777 owner=root group=root
+
+    - name: change mode4
+      file: path=/opt/file1/file4.txt state=touch mode=777 owner=root group=root
