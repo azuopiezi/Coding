@@ -21,7 +21,7 @@
     - name: set /etc/hosts all ip and hostname
       lineinfile:
         dest: /etc/hosts
-        regexp: '^{{ hostvars[item].ansible_host }}'
+        regexp: '^{{ hostvars[item].ansible_host }}' state=absent
         line: |
           {{ hostvars[item].ansible_host }} {{ item }}
 #可以这样写
