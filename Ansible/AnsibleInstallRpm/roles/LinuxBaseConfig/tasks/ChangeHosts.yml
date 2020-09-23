@@ -1,7 +1,4 @@
 ---
-- hosts: all
-
-  tasks:
     - name: register hosts
       set_fact:
         hosts: "{{ groups.nodes| unique | list }}"
@@ -12,12 +9,12 @@
     - name: change name
       shell: hostnamectl set-hostname {{inventory_hostname}}
 
-    - name: change /etc/hosts
-      lineinfile:
-        dest: /etc/hosts
-        line: "{{ ansible_default_ipv4.address }} {{ ansible_hostname }}"
-    - debug:
-        msg: "{{ ansible_default_ipv4.address }} {{ ansible_hostname }}"
+#    - name: change /etc/hosts
+#      lineinfile:
+#        dest: /etc/hosts
+#        line: "{{ ansible_default_ipv4.address }} {{ ansible_hostname }}"
+#    - debug:
+#        msg: "{{ ansible_default_ipv4.address }} {{ ansible_hostname }}"
 
 
 ##/etc/hosts 中添加组的的ip和主机名称对应表

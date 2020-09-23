@@ -4,5 +4,4 @@
 - include: ServiceChrony.yml
 - include: Temp.yml
 - include: ConfigChrony.yml
-
 - include: UnstallChrony.yml

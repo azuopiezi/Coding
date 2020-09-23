@@ -18,6 +18,14 @@
     line: 'allow {{ ansible_ens192.ipv4.network }}/{{ 24 }}'
   notify: restart chrony service
 
+- name: check timezone
+  shell: timedatectl  |grep "Time zone" |awk '{print $3}'
+  register: timezone_result
+
+- debug:
+    msg: "{{ timezone_result }}"
+
+
 - name: wait for chronyd status is ok
   shell: chronyc sources |grep "\*" |wc -l
   register: chronyc_sources_result
