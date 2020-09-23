@@ -15,7 +15,8 @@ Options:
   --version             show program's version number and exit'
 这个工具非常有用
 
-# ansible host 支持逻辑符来匹配不同的设置
+
+ansible host 支持逻辑符来匹配不同的设置
 ansible 的Host-pattern
 All: 表示所有Inventory 中的所有主机
 ansible all -m ping
@@ -40,7 +41,7 @@ ansible-galaxy list
 ansible-galaxy install geerlingguy.nginx
 
 
-[root@ansible ~]# ansible-galaxy install geerlingguy.nginx
+ ansible-galaxy install geerlingguy.nginx
 - downloading role 'nginx', owned by geerlingguy
 - downloading role from https://github.com/geerlingguy/ansible-role-nginx/archive/2.8.0.tar.gz
 - extracting geerlingguy.nginx to /etc/ansible/roles/geerlingguy.nginx
@@ -132,6 +133,15 @@ playbook 中变量使用
 变量名：仅能由字符、数字和下划线组成，且只能以字符开头
 变量来源：
  1.ansible setup facts 远程主机的所有变量都可以直接调用
+ "
+ ---
+- hosts: node1
+
+  tasks:
+    - name: set hostname
+      hostname: name=www{{ ansible_all_ipv4_addresses }}.test.com
+# 其中ansible_all_ipv4_addresses 是 主机的主机属性 这个变量直接可以使用
+ "
  2.在/etc/ansible/hosts 中定义
  普通变量：主机组中主机单独定义，优先级高于公共变量
  公共(组)变量：针对主机组中所有主机定义统一变量
@@ -254,4 +264,27 @@ ansible-playbook -e "var1=value1" xx.yml
 
 ansible-playbook xxx.yml
 "
-  5.在role中定义
+  5.在独立的变量yml文件中定义
+专门开存放变量的文件，例如vars.yml
+"
+---
+var1: httpd
+var2: vsftpd
+"
+调用变量在yml 中直接调用这个文件就可以了
+testvars.yml
+"
+---
+- hosts: node1
+  remote_user: root
+  vars_files:
+    - vars.yml
+
+
+  tasks:
+    - name: install package
+      yum: name={{ var1 }}
+    - name: create file
+      file: name=/data/{{ var2 }}.log state=touch
+"
+6.在role中定义

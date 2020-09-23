@@ -1,0 +1,86 @@
+---
+#include_vars  Load variables from files, dynamically within a task
+
+###hosts: 包含多个组，可以用：分开
+- hosts: OSD:MON:ADMIN:EXT
+#any_errors_faital: true 遇到报错 不退出，继续执行
+  any_errors_fatal: true
+  tasks:
+    - include: vars.yml
+      tags: always
+
+
+- include_vars:
+    dir: '../other/path/var/'
+
+修改主机名称
+
+- hosts: all
+  tasks:
+    - name: set hostname
+#x修改客户端名称，inventory_hostname 这个变量是用的hosts文本中的hostname
+      shell: hostnamectl set-hostname {{ inventory_hostname }}
+      tags: always
+
+ansible playbook 写法很灵活，一个tasks 中也可以定义其他的hosts 组来执行脚本如下脚本
+  - hosts: all:servers:nginx
+
+    tasks:
+      - name: exec yum paages
+        hosts: nginx
+        yum: name=nignx state=present
+        any_errors_fatal: true
+        tags: nginx
+
+run_once的用法,这种run_once 执行一次服务
+
+- name: configure and start nginx services
+  any_errors_fatal: true
+  hosts:
+    - nginx
+  roles:
+    - yum_install/nginx
+#这种run_once 执行一次服务
+  run_once: yes
+  tags: nginx
+
+set_fact
+set_fact 模块 允许设置新的变量，这个变量和setup模块中的变量是一样，可以在运行ansible-playbook中使用，但是不能保存
+
+      - set_fact:
+          one_fact: something
+          other_fact: "{{ local_var * 2 }}"
+          another_fact: "{{ some_registered_var.results | map(attribute='ansible_facts.some_fa"
+
+
+
+vim delete_hosts.yml
+
+#修改/etc/hosts
+---
+- hosts: all
+
+  tasks:
+    - name: delete file in /etc/hosts
+      lineinfile:
+        dest: /etc/hosts
+        regexp: '^$'
+        state: absent
+    - name: delete file1 in /etc/hosts
+      lineinfile:
+        dest: /etc/hosts
+        regexp: '{{ item }}$'
+        state: absent
+      with_items:
+        - '{{ ansible_host }}'
+
+安装chronyd 且进行同步
+---
+- hosts: all
+
+  task:
+    - name:
+      lineinfile:
+        dest: /etc/hosts
+        regexp: ''
+
