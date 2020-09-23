@@ -20,12 +20,31 @@
       when: file_result.stat.exists != True
 
 
+    - name: cat /opt/block.txt
+      shell : cat /opt/block.txt
+      register: result
+    - debug:
+        msg: "{{ result.stdout_lines }}"
+      ignore_errors: yes
+
+    - name: delete the block1
+      lineinfile:
+        dest: /opt/block.txt
+        regexp: '^{{item}}'
+        state: absent
+      with_items:
+        - b*
+        - "ANSIBLE INJECTED  NODE SSH FOR"
+
+
+
     - name: insert lineinfile in file
       blockinfile:
         dest: /opt/block.txt
-        state: absent
+        state: present
         marker: "ANSIBLE INJECTED  NODE SSH FOR"
         block: |
           block1
           block2
           block3
+#      run_once: yes
