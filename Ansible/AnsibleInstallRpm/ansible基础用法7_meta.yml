@@ -17,8 +17,8 @@
     - debug:
         msg: "create file2"
     - name: create file3
-    file: path=/opt/file3 state=directory
-    notify: change mode3
+      file: path=/opt/file3 state=directory
+      notify: change mode3
     - debug:
         msg: "create file3"
     - name: create file4
