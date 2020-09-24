@@ -1,0 +1,31 @@
+---
+- hosts: all
+  tasks:
+    
+
+    - name: backup the chrony.conf
+      shell: |
+        pushd /etc/
+        [ -e chrony.conf ] && cp chrony.conf{,.bk}
+        popd
+    - debug:
+        msg: "backup the chrony.conf"
+  
+    - name: mkdir /opt/rc_dir
+      shell: |
+        cmd: mkdir /opt/rc_dir
+      register: result_rc
+      failed_when: result_rc.rc != 0
+      ignore_errors: True
+    - debug:
+        msg: "{{ result_rc.stdout }}"
+      ignore_errors: yes
+
+    - name: chdir the /opt/rc_dir
+      shell:
+      args: 
+        chdir: /opt/rc_dir
+        cmd: pwd
+      register: result_pwd
+    - debug: 
+        msg: "{{ result_pwd['stdout_lines'],result_pwd.start }}"
