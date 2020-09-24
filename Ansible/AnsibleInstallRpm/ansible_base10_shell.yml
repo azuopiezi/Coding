@@ -29,3 +29,19 @@
       register: result_pwd
     - debug: 
         msg: "{{ result_pwd['stdout_lines'],result_pwd.start }}"
+
+    - name: exec shell abd.sh and result to shell_file4
+#这个命令执行时需要两个条件： 1. 需要到指定目录下执行，2这个目录下没有参数中的文件时才能执行
+      shell: sh abd.sh >> shell_file4
+      args:
+        chdir: /opt/
+        creates: shell_file4
+      register: result
+    - debug:
+        msg: "create a file"
+
+
+
+
+
+
